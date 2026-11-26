@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controlador web del módulo Gestión de Clientes (RF-03).
@@ -40,6 +41,7 @@ public class ClienteServlet extends HttpServlet {
         try {
             switch (accion) {
                 case "nuevo" -> mostrarFormularioNuevo(request, response);
+                case "editar" -> mostrarFormularioEditar(request, response);
                 case "buscar" -> buscarPorId(request, response);
                 default -> listar(request, response);
             }
@@ -49,7 +51,7 @@ public class ClienteServlet extends HttpServlet {
     }
 
     /**
-     * Atiende los trámites: registrar (actualizar y eliminar llegan en el paso 5).
+     * Atiende los trámites: registrar, actualizar o eliminar.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -58,6 +60,8 @@ public class ClienteServlet extends HttpServlet {
         try {
             switch (accion) {
                 case "registrar" -> registrar(request, response);
+                case "actualizar" -> actualizar(request, response);
+                case "eliminar" -> eliminar(request, response);
                 default -> response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Acción no válida");
             }
         } catch (SQLException e) {
@@ -96,6 +100,19 @@ public class ClienteServlet extends HttpServlet {
         mostrarFormulario(request, response, "registrar");
     }
 
+    private void mostrarFormularioEditar(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        Integer id = convertirEntero(request.getParameter("id"));
+        Optional<Cliente> cliente = id == null ? Optional.empty() : clienteDAO.buscarPorId(id);
+        if (cliente.isEmpty()) {
+            guardarMensaje(request, "error", "El cliente que quiere editar no existe.");
+            response.sendRedirect(request.getContextPath() + "/clientes");
+            return;
+        }
+        request.setAttribute("cliente", cliente.get());
+        mostrarFormulario(request, response, "actualizar");
+    }
+
     // ---------- Acciones POST ----------
 
     private void registrar(HttpServletRequest request, HttpServletResponse response)
@@ -116,6 +133,49 @@ public class ClienteServlet extends HttpServlet {
         }
     }
 
+    private void actualizar(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        Cliente cliente = leerFormulario(request);
+        Integer id = convertirEntero(request.getParameter("idPersona"));
+        if (id == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Falta el id del cliente");
+            return;
+        }
+        cliente.setIdPersona(id);
+        List<String> errores = validar(cliente, false);
+        if (!errores.isEmpty()) {
+            devolverConErrores(request, response, cliente, errores, "actualizar");
+            return;
+        }
+        try {
+            if (clienteDAO.actualizar(cliente)) {
+                guardarMensaje(request, "exito", "Cliente #" + id + " actualizado.");
+            } else {
+                guardarMensaje(request, "error", "El cliente #" + id + " ya no existe.");
+            }
+            response.sendRedirect(request.getContextPath() + "/clientes");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            errores.add("Ese correo ya lo tiene otra persona.");
+            devolverConErrores(request, response, cliente, errores, "actualizar");
+        }
+    }
+
+    private void eliminar(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        Integer id = convertirEntero(request.getParameter("idPersona"));
+        try {
+            if (id != null && clienteDAO.eliminar(id)) {
+                guardarMensaje(request, "exito", "Cliente #" + id + " eliminado.");
+            } else {
+                guardarMensaje(request, "error", "El cliente que quiere eliminar no existe.");
+            }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            guardarMensaje(request, "error", "No se puede eliminar el cliente #" + id
+                    + " porque tiene motos registradas. Puede marcarlo como INACTIVO.");
+        }
+        response.sendRedirect(request.getContextPath() + "/clientes");
+    }
+
     // ---------- Ayudantes ----------
 
     private Cliente leerFormulario(HttpServletRequest request) {
@@ -131,7 +191,7 @@ public class ClienteServlet extends HttpServlet {
         return cliente;
     }
 
-        private List<String> validar(Cliente cliente, boolean esNuevo) {
+    private List<String> validar(Cliente cliente, boolean esNuevo) {
         List<String> errores = new ArrayList<>();
         if (esNuevo) {
             if (cliente.getTipoDocumento() == null || !TIPOS_DOCUMENTO.contains(cliente.getTipoDocumento())) {

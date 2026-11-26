@@ -30,7 +30,7 @@
                 <thead>
                 <tr>
                     <th>Id</th><th>Documento</th><th>Nombre</th><th>Teléfono</th>
-                    <th>Correo</th><th>Estado</th>
+                    <th>Correo</th><th>Estado</th><th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -42,6 +42,17 @@
                         <td><c:out value="${cliente.telefono}" default="—" /></td>
                         <td><c:out value="${cliente.email}" default="—" /></td>
                         <td><span class="insignia insignia--${cliente.estado}">${cliente.estado}</span></td>
+                        <td class="tabla__acciones">
+                            <a class="boton boton--pequeno"
+                               href="${pageContext.request.contextPath}/clientes?accion=editar&id=${cliente.idPersona}">Editar</a>
+                            <%-- Eliminar cambia datos: por eso es un formulario POST y no un enlace --%>
+                            <form action="${pageContext.request.contextPath}/clientes" method="post"
+                                  onsubmit="return confirm('¿Eliminar al cliente #${cliente.idPersona}?');">
+                                <input type="hidden" name="accion" value="eliminar">
+                                <input type="hidden" name="idPersona" value="${cliente.idPersona}">
+                                <button class="boton boton--peligro boton--pequeno" type="submit">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>
