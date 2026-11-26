@@ -1,0 +1,103 @@
+/* Colores tomados del prototipo de Motores JEY (EV03) */
+:root {
+    --color-fondo: #0F3C59;
+    --color-superficie: #134a6e;
+    --color-texto: #ffffff;
+    --color-acento: #F36B05;
+    --color-acento-texto: #FF8A2B;
+    --color-sobre-acento: #0A2638;
+    --color-error: #FFA3A3;
+    --color-exito: #9BE7B0;
+    --radio: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a { color: var(--color-acento-texto); }
+
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--color-sobre-acento);
+    border-bottom: 3px solid var(--color-acento);
+}
+.encabezado__marca { font-weight: 800; font-size: 1.3rem; color: var(--color-acento-texto); text-decoration: none; }
+.encabezado__menu { display: flex; gap: 16px; }
+.encabezado__menu a { color: var(--color-texto); text-decoration: none; }
+.encabezado__menu a:hover { color: var(--color-acento-texto); }
+
+.contenido { flex: 1; width: 100%; max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+.pie { text-align: center; padding: 16px; font-size: .85rem; opacity: .8; }
+
+.tarjeta { background: var(--color-superficie); border-radius: var(--radio); padding: 20px; }
+
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+
+.boton {
+    display: inline-block;
+    padding: 10px 18px;
+    border: 2px solid var(--color-acento);
+    border-radius: var(--radio);
+    background: var(--color-acento);
+    color: var(--color-sobre-acento);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.boton--secundario { background: transparent; color: var(--color-acento-texto); }
+.boton--peligro { background: var(--color-error); border-color: var(--color-error); }
+.boton--pequeno { padding: 6px 10px; font-size: .85rem; }
+
+.buscador { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 16px 0; }
+.buscador input { width: 120px; }
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #7aa3bf;
+    border-radius: var(--radio);
+    font: inherit;
+}
+input[readonly], select:disabled { background: #d9e4ec; }
+
+.formulario { display: grid; gap: 14px; }
+.formulario__fila { display: grid; gap: 14px; grid-template-columns: 1fr; }
+.campo label { display: block; margin-bottom: 6px; font-weight: 600; }
+
+.aviso { padding: 12px 16px; border-radius: var(--radio); color: var(--color-sobre-acento); }
+.aviso--exito { background: var(--color-exito); }
+.aviso--error { background: var(--color-error); }
+.aviso ul { margin: 6px 0 0; }
+
+.tabla-contenedor { overflow-x: auto; }
+.tabla { width: 100%; border-collapse: collapse; background: var(--color-superficie); border-radius: var(--radio); }
+.tabla th, .tabla td { padding: 10px; text-align: left; border-bottom: 1px solid #2c6a91; white-space: nowrap; }
+.tabla th { color: var(--color-acento-texto); }
+.tabla__acciones { display: flex; gap: 6px; }
+.tabla__acciones form { margin: 0; }
+
+.insignia { padding: 3px 10px; border-radius: 99px; font-size: .8rem; font-weight: 700; color: var(--color-sobre-acento); }
+.insignia--ACTIVO { background: var(--color-exito); }
+.insignia--INACTIVO { background: #c7c7c7; }
+
+.vacio, .total { opacity: .85; }
+
+@media (min-width: 700px) {
+    .formulario__fila { grid-template-columns: 1fr 1fr; }
+}

@@ -1,12 +1,16 @@
+<%-- Página de inicio del módulo --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Motores JEY</title>
-</head>
-<body>
-    <h1>Motores JEY · Gestión de Clientes</h1>
-    <p>Tomcat está atendiendo. Hora del servidor: <%= java.time.LocalTime.now().withNano(0) %></p>
-</body>
-</html>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="tituloPagina" value="Inicio" />
+<%@ include file="/WEB-INF/vistas/plantilla/encabezado.jspf" %>
+
+<section class="tarjeta">
+    <h1>Módulo Gestión de Clientes</h1>
+    <p>Registre, consulte, actualice y elimine los clientes del taller (RF-03).</p>
+    <div class="acciones">
+        <a class="boton" href="${pageContext.request.contextPath}/clientes">Ver clientes</a>
+        <a class="boton boton--secundario" href="${pageContext.request.contextPath}/clientes?accion=nuevo">Registrar cliente</a>
+    </div>
+</section>
+
+<%@ include file="/WEB-INF/vistas/plantilla/pie.jspf" %>
