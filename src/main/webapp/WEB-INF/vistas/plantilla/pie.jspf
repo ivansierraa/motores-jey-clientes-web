@@ -1,0 +1,7 @@
+<%-- Pie común. Usa una expresión JSP (<%= %>) para escribir el año actual. --%>
+</main>
+<footer class="pie">
+    YIE Software Group S.A.S. · Motores JEY · <%= java.time.Year.now() %>
+</footer>
+</body>
+</html>

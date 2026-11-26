@@ -1,0 +1,19 @@
+<%-- Encabezado común. Se pega en cada página con la directiva include.
+     Usa la variable tituloPagina, que cada página define antes de incluirlo. --%>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${empty tituloPagina ? 'Motores JEY' : tituloPagina} · Motores JEY</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
+</head>
+<body>
+<header class="encabezado">
+    <a class="encabezado__marca" href="${pageContext.request.contextPath}/">Motores JEY</a>
+    <nav class="encabezado__menu">
+        <a href="${pageContext.request.contextPath}/clientes">Clientes</a>
+        <a href="${pageContext.request.contextPath}/clientes?accion=nuevo">Registrar cliente</a>
+    </nav>
+</header>
+<main class="contenido">

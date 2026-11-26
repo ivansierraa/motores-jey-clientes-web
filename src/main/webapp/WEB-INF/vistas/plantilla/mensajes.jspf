@@ -1,0 +1,12 @@
+<%-- Muestra el aviso guardado en la sesión (después de registrar, actualizar o eliminar)
+     y lo borra para que no salga dos veces. --%>
+<c:if test="${not empty sessionScope.mensajeTexto}">
+    <p class="aviso aviso--${sessionScope.mensajeTipo}" role="status">
+        <c:out value="${sessionScope.mensajeTexto}" />
+    </p>
+    <c:remove var="mensajeTexto" scope="session" />
+    <c:remove var="mensajeTipo" scope="session" />
+</c:if>
+<c:if test="${not empty error}">
+    <p class="aviso aviso--error" role="alert"><c:out value="${error}" /></p>
+</c:if>
